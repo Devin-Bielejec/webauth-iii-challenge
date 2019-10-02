@@ -15,6 +15,7 @@ const insert = (user) => {
 }
 
 const findByUserName = (username) => {
+  console.log(username);
   return db("users")
   .where(username);
 }
