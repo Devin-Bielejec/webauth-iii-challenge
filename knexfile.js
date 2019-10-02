@@ -1,10 +1,8 @@
 const db = require("knex")({
-  development: {
-    client: 'sqlite3',
+  client: 'sqlite3',
     connection: {
       filename: './dev.sqlite3'
     }
-  }
 })
 
 const findAll = () => {
@@ -19,4 +17,10 @@ const insert = (user) => {
 const findByUserName = (username) => {
   return db("users")
   .where(username);
+}
+
+module.exports = {
+  findAll,
+  insert,
+  findByUserName
 }
