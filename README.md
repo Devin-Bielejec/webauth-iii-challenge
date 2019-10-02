@@ -25,7 +25,7 @@ The user schema should include: `username`, `password` and `department`. The `de
 
 Use **JSON Web Tokens** to keep users authenticated across requests.
 
-Knex
+[X] Knex
 -install etc
 -migrations: id, username, password, department - all strings
 -seed: {id, username: "Devin", password: "isCool", department: "Awesome} etc
