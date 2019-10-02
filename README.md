@@ -34,7 +34,7 @@ Use **JSON Web Tokens** to keep users authenticated across requests.
     -find User by username
     -findAll
 
-index.js
+[X] index.js
 -server and import auth router etc
 -express etc
 
