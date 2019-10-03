@@ -4,7 +4,9 @@ const bcrypt = require("bcryptjs");
 const users = require("../knexfile.js");
 const jwt = require("jsonwebtoken");
 const secrets = require("../secrets/secrets");
-//router. etc
+const protected = require("./auth-middleware");
+
+
 
 //register
 router.post("/register", (req, res) => {
@@ -30,10 +32,17 @@ router.post('/login', (req, res) => {
   users.findByUserName({ username })
     .first()
     .then(user => {
-        console.log(user);
+        
+        console.log("user", user);
       if (user && bcrypt.compareSync(password, user.password)) {
+        console.log('before req', req.session);
+
+        req.session.user = "Chicken";
+        console.log("After session", req.session);
+        
         const token = generateToken(user); // new line
-        console.log(token);
+        console.log("TOKEN", token);
+        
         // the server needs to return the token to the client
         // this doesn't happen automatically like it happens with cookies
         res.status(200).json({
@@ -49,8 +58,19 @@ router.post('/login', (req, res) => {
     });
 });
 
+router.get("/users", protected, (req, res) => {
+    users.findAll()
+    .then(response => {
+        console.log(response);
+        res.status(200).json(response);
+    })
+    .catch(error => {
+        res.status(500).json({message: "SERVER ERROR! RUN FOR THE HILLS!"})
+    })
+})
+
 function generateToken(user) {
-    console.log(user.id, user.username);
+    console.log(user.id, user.username, secrets.jwtSecret);
   const payload = {
     subject: user.id, // sub in payload is what the token is about
     username: user.username,
@@ -62,6 +82,7 @@ function generateToken(user) {
   };
 
   // extract the secret away so it can be required and used where needed
+  console.log(payload, secrets.jwtSecret, options);
   return jwt.sign(payload, secrets.jwtSecret, options); // this method is synchronous
 }
 
